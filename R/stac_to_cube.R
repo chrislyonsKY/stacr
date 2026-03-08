@@ -36,7 +36,7 @@ stac_to_cube <- function(items, asset_names = NULL, ...) {
   check_suggested_pkg("gdalcubes")
 
   gdalcubes::stac_image_collection(
-    s = items,
+    s = items$features,
     asset_names = asset_names,
     ...
   )
