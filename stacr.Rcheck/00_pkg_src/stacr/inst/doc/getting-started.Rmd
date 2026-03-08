@@ -1,0 +1,104 @@
+---
+title: "Getting Started with stacr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with stacr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+has_net <- stacr::has_internet()
+```
+
+```{r setup}
+library(stacr)
+```
+
+## Overview
+
+**stacr** wraps the [rstac](https://brazil-data-cube.github.io/rstac/) package
+with a pipe-friendly, tidy API. Every result is returned as a tibble — never a
+nested list. The package ships with a catalog registry of known STAC endpoints
+and supports any STAC API URL.
+
+Key features:
+
+- **Tidy output** — all functions return tibbles (AD-02)
+- **Catalog registry** — browse Planetary Computer, Earth Search, USGS, and more
+- **gdalcubes bridge** — hand off search results to `gdalcubes` data cubes
+- **Leaflet mapping** — visualize item footprints interactively
+
+## Browse Known Catalogs
+
+`stac_catalogs()` returns a tibble of STAC endpoints bundled with the package:
+```{r}
+stac_catalogs()
+```
+
+## List Collections
+
+Query a STAC API to see what data collections are available:
+```{r, eval = has_net}
+stac_collections("https://earth-search.aws.element84.com/v1")
+```
+
+## Search for Items
+
+Search for specific items by collection, bounding box, and date range:
+```{r, eval = has_net}
+items <- stac_search(
+  url = "https://earth-search.aws.element84.com/v1",
+  collections = "sentinel-2-l2a",
+  bbox = c(-84.5, 38.0, -84.3, 38.2),
+  datetime = "2024-06-01T00:00:00Z/2024-06-30T00:00:00Z",
+  limit = 5
+)
+items
+```
+
+Each row is one STAC item with an `id`, `collection`, `datetime`, spatial
+`bbox` and `geometry`, and a list of available `assets`.
+
+## Browse Items in a Collection
+
+List items directly from a specific collection:
+```{r, eval = has_net}
+stac_items(
+  url = "https://earth-search.aws.element84.com/v1",
+  collection = "sentinel-2-l2a",
+  limit = 3
+)
+```
+
+## Bridge to gdalcubes
+
+For raster analysis, use `stac_to_cube()` to hand off items to
+[gdalcubes](https://gdalcubes.github.io/). This requires the `gdalcubes`
+package and uses the raw rstac result from `stac_search_raw()`:
+
+```{r, eval = FALSE}
+raw <- stac_search_raw(
+  url = "https://earth-search.aws.element84.com/v1",
+  collections = "sentinel-2-l2a",
+  bbox = c(-84.5, 38.0, -84.3, 38.2),
+  limit = 10
+)
+cube <- stac_to_cube(raw, asset_names = c("red", "green", "blue"))
+```
+
+## Map Item Footprints
+
+Visualize search results on an interactive leaflet map (requires `leaflet` and
+`sf`):
+
+```{r, eval = FALSE}
+items <- stac_search(
+  url = "https://earth-search.aws.element84.com/v1",
+  collections = "sentinel-2-l2a",
+  bbox = c(-84.5, 38.0, -84.3, 38.2),
+  limit = 5
+)
+stac_map(items)
+```

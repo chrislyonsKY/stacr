@@ -1,0 +1,354 @@
+
+R version 4.5.2 (2025-10-31) -- "[Not] Part in a Rumble"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: aarch64-apple-darwin20
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "stacr"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> base::assign(".ExTimings", "stacr-Ex.timings", pos = 'CheckExEnv')
+> base::cat("name\tuser\tsystem\telapsed\n", file=base::get(".ExTimings", pos = 'CheckExEnv'))
+> base::assign(".format_ptime",
++ function(x) {
++   if(!is.na(x[4L])) x[1L] <- x[1L] + x[4L]
++   if(!is.na(x[5L])) x[2L] <- x[2L] + x[5L]
++   options(OutDec = '.')
++   format(x[1L:3L], digits = 7L)
++ },
++ pos = 'CheckExEnv')
+> 
+> ### * </HEADER>
+> library('stacr')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> base::assign(".old_wd", base::getwd(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("has_internet")
+> ### * has_internet
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: has_internet
+> ### Title: Check internet connectivity
+> ### Aliases: has_internet
+> 
+> ### ** Examples
+> 
+> has_internet()
+[1] TRUE
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("has_internet", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("stac_catalogs")
+> ### * stac_catalogs
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: stac_catalogs
+> ### Title: List Known STAC Catalogs
+> ### Aliases: stac_catalogs
+> 
+> ### ** Examples
+> 
+> stac_catalogs()
+# A tibble: 3 × 3
+  name               url                                                provider
+  <chr>              <chr>                                              <chr>   
+1 Earth Search       https://earth-search.aws.element84.com/v1          Element…
+2 Planetary Computer https://planetarycomputer.microsoft.com/api/stac/… Microso…
+3 USGS               https://landsatlook.usgs.gov/stac-server           USGS    
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("stac_catalogs", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("stac_collections")
+> ### * stac_collections
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: stac_collections
+> ### Title: List STAC Collections
+> ### Aliases: stac_collections
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (has_internet()) withAutoprint({ # examplesIf
++ ## End(Don't show)
++ stac_collections("https://earth-search.aws.element84.com/v1")
++ ## Don't show: 
++ }) # examplesIf
+> stac_collections("https://earth-search.aws.element84.com/v1")
+# A tibble: 9 × 3
+  id                    title                                        description
+  <chr>                 <chr>                                        <chr>      
+1 sentinel-2-pre-c1-l2a "Sentinel-2 Pre-Collection 1 Level-2A "      "Sentinel-…
+2 cop-dem-glo-30        "Copernicus DEM GLO-30"                      "The Coper…
+3 naip                  "NAIP: National Agriculture Imagery Program" "The [Nati…
+4 cop-dem-glo-90        "Copernicus DEM GLO-90"                      "The Coper…
+5 landsat-c2-l2         "Landsat Collection 2 Level-2"               "Atmospher…
+6 sentinel-2-l2a        "Sentinel-2 Level-2A"                        "Global Se…
+7 sentinel-2-l1c        "Sentinel-2 Level-1C"                        "Global Se…
+8 sentinel-2-c1-l2a     "Sentinel-2 Collection 1 Level-2A"           "Sentinel-…
+9 sentinel-1-grd        "Sentinel-1 Level-1C Ground Range Detected … "Sentinel-…
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("stac_collections", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("stac_download")
+> ### * stac_download
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: stac_download
+> ### Title: Download STAC Assets
+> ### Aliases: stac_download
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (has_internet()) withAutoprint({ # examplesIf
++ ## End(Don't show)
++ ## No test: 
++ # Search for items first
++ items <- stac_search(
++   url = "https://earth-search.aws.element84.com/v1",
++   collections = "sentinel-2-l2a",
++   bbox = c(-84.5, 38.0, -84.3, 38.2),
++   limit = 1
++ )
++ ## End(No test)
++ ## Don't show: 
++ }) # examplesIf
+> items <- stac_search(url = "https://earth-search.aws.element84.com/v1", 
++     collections = "sentinel-2-l2a", bbox = c(-84.5, 38, -84.3, 38.2), limit = 1)
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("stac_download", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("stac_items")
+> ### * stac_items
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: stac_items
+> ### Title: List Items in a STAC Collection
+> ### Aliases: stac_items
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (has_internet()) withAutoprint({ # examplesIf
++ ## End(Don't show)
++ ## No test: 
++ stac_items(
++   url = "https://earth-search.aws.element84.com/v1",
++   collection = "sentinel-2-l2a",
++   limit = 5
++ )
++ ## End(No test)
++ ## Don't show: 
++ }) # examplesIf
+> stac_items(url = "https://earth-search.aws.element84.com/v1", collection = "sentinel-2-l2a", 
++     limit = 5)
+# A tibble: 5 × 6
+  id                       collection     datetime     bbox  geometry     assets
+  <chr>                    <chr>          <chr>        <lis> <list>       <list>
+1 S2B_32VLJ_20260308_0_L2A sentinel-2-l2a 2026-03-08T… <dbl> <named list> <chr> 
+2 S2B_31VDE_20260308_0_L2A sentinel-2-l2a 2026-03-08T… <dbl> <named list> <chr> 
+3 S2B_32VMJ_20260308_0_L2A sentinel-2-l2a 2026-03-08T… <dbl> <named list> <chr> 
+4 S2B_31VEE_20260308_0_L2A sentinel-2-l2a 2026-03-08T… <dbl> <named list> <chr> 
+5 S2B_32VKK_20260308_0_L2A sentinel-2-l2a 2026-03-08T… <dbl> <named list> <chr> 
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("stac_items", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("stac_map")
+> ### * stac_map
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: stac_map
+> ### Title: Map STAC Item Footprints
+> ### Aliases: stac_map
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (has_internet() && requireNamespace("leaflet", quietly = TRUE) && requireNamespace("sf", quietly = TRUE)) withAutoprint({ # examplesIf
++ ## End(Don't show)
++ ## No test: 
++ items <- stac_search(
++   url = "https://earth-search.aws.element84.com/v1",
++   collections = "sentinel-2-l2a",
++   bbox = c(-84.5, 38.0, -84.3, 38.2),
++   limit = 5
++ )
++ stac_map(items)
++ ## End(No test)
++ ## Don't show: 
++ }) # examplesIf
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("stac_map", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("stac_search")
+> ### * stac_search
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: stac_search
+> ### Title: Search a STAC API
+> ### Aliases: stac_search
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (has_internet()) withAutoprint({ # examplesIf
++ ## End(Don't show)
++ ## No test: 
++ stac_search(
++   url = "https://earth-search.aws.element84.com/v1",
++   collections = "sentinel-2-l2a",
++   bbox = c(-84.5, 38.0, -84.3, 38.2),
++   limit = 5
++ )
++ ## End(No test)
++ ## Don't show: 
++ }) # examplesIf
+> stac_search(url = "https://earth-search.aws.element84.com/v1", collections = "sentinel-2-l2a", 
++     bbox = c(-84.5, 38, -84.3, 38.2), limit = 5)
+# A tibble: 5 × 6
+  id                       collection     datetime     bbox  geometry     assets
+  <chr>                    <chr>          <chr>        <lis> <list>       <list>
+1 S2B_16SGH_20260304_0_L2A sentinel-2-l2a 2026-03-04T… <dbl> <named list> <chr> 
+2 S2B_17SKC_20260304_0_L2A sentinel-2-l2a 2026-03-04T… <dbl> <named list> <chr> 
+3 S2C_16SGH_20260227_0_L2A sentinel-2-l2a 2026-02-27T… <dbl> <named list> <chr> 
+4 S2C_17SKC_20260227_0_L2A sentinel-2-l2a 2026-02-27T… <dbl> <named list> <chr> 
+5 S2B_16SGH_20260222_0_L2A sentinel-2-l2a 2026-02-22T… <dbl> <named list> <chr> 
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("stac_search", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("stac_search_raw")
+> ### * stac_search_raw
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: stac_search_raw
+> ### Title: Search STAC and Return Raw rstac Result
+> ### Aliases: stac_search_raw
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (has_internet()) withAutoprint({ # examplesIf
++ ## End(Don't show)
++ ## No test: 
++ raw <- stac_search_raw(
++   url = "https://earth-search.aws.element84.com/v1",
++   collections = "sentinel-2-l2a",
++   bbox = c(-84.5, 38.0, -84.3, 38.2),
++   limit = 1
++ )
++ ## End(No test)
++ ## Don't show: 
++ }) # examplesIf
+> raw <- stac_search_raw(url = "https://earth-search.aws.element84.com/v1", 
++     collections = "sentinel-2-l2a", bbox = c(-84.5, 38, -84.3, 38.2), limit = 1)
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("stac_search_raw", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> cleanEx()
+> nameEx("stac_to_cube")
+> ### * stac_to_cube
+> 
+> flush(stderr()); flush(stdout())
+> 
+> base::assign(".ptime", proc.time(), pos = "CheckExEnv")
+> ### Name: stac_to_cube
+> ### Title: Convert STAC Items to a gdalcubes Image Collection
+> ### Aliases: stac_to_cube
+> 
+> ### ** Examples
+> 
+> ## Don't show: 
+> if (has_internet() && requireNamespace("gdalcubes", quietly = TRUE)) withAutoprint({ # examplesIf
++ ## End(Don't show)
++ ## No test: 
++ raw <- stac_search_raw(
++   url = "https://earth-search.aws.element84.com/v1",
++   collections = "sentinel-2-l2a",
++   bbox = c(-84.5, 38.0, -84.3, 38.2),
++   limit = 5
++ )
++ cube <- stac_to_cube(raw, asset_names = c("red", "green", "blue"))
++ ## End(No test)
++ ## Don't show: 
++ }) # examplesIf
+> ## End(Don't show)
+> 
+> 
+> 
+> base::assign(".dptime", (proc.time() - get(".ptime", pos = "CheckExEnv")), pos = "CheckExEnv")
+> base::cat("stac_to_cube", base::get(".format_ptime", pos = 'CheckExEnv')(get(".dptime", pos = "CheckExEnv")), "\n", file=base::get(".ExTimings", pos = 'CheckExEnv'), append=TRUE, sep="\t")
+> ### * <FOOTER>
+> ###
+> cleanEx()
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  1.159 0.078 6.683 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

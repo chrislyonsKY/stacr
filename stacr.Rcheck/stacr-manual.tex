@@ -1,0 +1,592 @@
+\nonstopmode{}
+\documentclass[a4paper]{book}
+\usepackage[times,inconsolata,hyper]{Rd}
+\usepackage{makeidx}
+\makeatletter\@ifl@t@r\fmtversion{2018/04/01}{}{\usepackage[utf8]{inputenc}}\makeatother
+% \usepackage{graphicx} % @USE GRAPHICX@
+\makeindex{}
+\begin{document}
+\chapter*{}
+\begin{center}
+{\textbf{\huge Package `stacr'}}
+\par\bigskip{\large \today}
+\end{center}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdftitle = {stacr: Tidy 'STAC' Workflows for R}}}{}
+\ifthenelse{\boolean{Rd@use@hyper}}{\hypersetup{pdfauthor = {Chris Lyons}}}{}
+\begin{description}
+\raggedright{}
+\item[Title]\AsIs{Tidy 'STAC' Workflows for R}
+\item[Version]\AsIs{0.1.0}
+\item[Description]\AsIs{Wraps the 'rstac' package with a pipe-friendly, tidy API. All results return 'tibbles' instead of nested lists. Ships with a catalog registry of known 'STAC' endpoints including Planetary Computer, Earth Search, and 'USGS', while supporting any 'STAC' API URL.}
+\item[License]\AsIs{MIT + file LICENSE}
+\item[URL]\AsIs{}\url{https://github.com/null-island-labs/stacr}\AsIs{}
+\item[BugReports]\AsIs{}\url{https://github.com/null-island-labs/stacr/issues}\AsIs{}
+\item[Depends]\AsIs{R (>= 4.1.0)}
+\item[Imports]\AsIs{rstac, tibble, cli}
+\item[Suggests]\AsIs{gdalcubes, jsonlite, leaflet, sf, testthat (>= 3.0.0), withr,
+knitr, rmarkdown}
+\item[Encoding]\AsIs{UTF-8}
+\item[Roxygen]\AsIs{list(markdown = TRUE)}
+\item[RoxygenNote]\AsIs{7.3.3}
+\item[Config/testthat/edition]\AsIs{3}
+\item[VignetteBuilder]\AsIs{knitr}
+\item[NeedsCompilation]\AsIs{no}
+\item[Author]\AsIs{Chris Lyons [aut, cre, cph]}
+\item[Maintainer]\AsIs{Chris Lyons }\email{chrislyons@nullislandlabs.dev}\AsIs{}
+\end{description}
+\Rdcontents{Contents}
+\HeaderA{stacr-package}{stacr: Tidy 'STAC' Workflows for R}{stacr.Rdash.package}
+\aliasA{stacr}{stacr-package}{stacr}
+\keyword{internal}{stacr-package}
+%
+\begin{Description}
+Wraps the 'rstac' package with a pipe-friendly, tidy API. All results return 'tibbles' instead of nested lists. Ships with a catalog registry of known 'STAC' endpoints including Planetary Computer, Earth Search, and 'USGS', while supporting any 'STAC' API URL.
+\end{Description}
+%
+\begin{Author}
+\strong{Maintainer}: Chris Lyons \email{chrislyons@nullislandlabs.dev} [copyright holder]
+
+\end{Author}
+%
+\begin{SeeAlso}
+Useful links:
+\begin{itemize}
+
+\item{} \url{https://github.com/null-island-labs/stacr}
+\item{} Report bugs at \url{https://github.com/null-island-labs/stacr/issues}
+
+\end{itemize}
+
+
+\end{SeeAlso}
+\HeaderA{check\_suggested\_pkg}{Check that a suggested package is available}{check.Rul.suggested.Rul.pkg}
+\keyword{internal}{check\_suggested\_pkg}
+%
+\begin{Description}
+Check that a suggested package is available
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+check_suggested_pkg(pkg)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{pkg}] Package name as a string.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\code{TRUE} invisibly if available; throws an error otherwise.
+\end{Value}
+\HeaderA{has\_internet}{Check internet connectivity}{has.Rul.internet}
+%
+\begin{Description}
+Tests whether a network connection to a STAC endpoint is available.
+Used in \AsIs{\texttt{@examplesIf}} guards for network-dependent examples.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+has_internet()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Value}
+\code{TRUE} if an internet connection is available, \code{FALSE} otherwise.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+has_internet()
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{stac\_catalogs}{List Known STAC Catalogs}{stac.Rul.catalogs}
+%
+\begin{Description}
+Returns a tibble of known STAC API endpoints bundled with the package.
+Includes Planetary Computer, Earth Search, and USGS catalogs.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+stac_catalogs()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Value}
+A \LinkA{tibble::tibble}{tibble::tibble} with columns:
+\begin{description}
+
+\item[name] Human-readable catalog name.
+\item[url] Root URL of the STAC API endpoint.
+\item[provider] Organization providing the catalog.
+
+\end{description}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+stac_catalogs()
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{stac\_collections}{List STAC Collections}{stac.Rul.collections}
+%
+\begin{Description}
+Queries a STAC API endpoint and returns available collections as a tidy
+tibble. Wraps \code{\LinkA{rstac::collections()}{rstac::collections()}} with tidy output.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+stac_collections(url)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{url}] Character. Root URL of a STAC API endpoint
+(e.g., \code{"https://earth-search.aws.element84.com/v1"}).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \LinkA{tibble::tibble}{tibble::tibble} with one row per collection and columns:
+\begin{description}
+
+\item[id] Collection identifier.
+\item[title] Human-readable title.
+\item[description] Collection description.
+
+\end{description}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+stac_collections("https://earth-search.aws.element84.com/v1")
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{stac\_download}{Download STAC Assets}{stac.Rul.download}
+%
+\begin{Description}
+Downloads assets from STAC items returned by \code{\LinkA{stac\_search()}{stac.Rul.search}} or
+\code{\LinkA{stac\_items()}{stac.Rul.items}}. Wraps \code{\LinkA{rstac::assets\_download()}{rstac::assets.Rul.download()}} with tidy output.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+stac_download(items, assets = NULL, output_dir = tempdir(), overwrite = FALSE)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{items}] An rstac \code{doc\_items} object as returned by \code{\LinkA{stac\_search()}{stac.Rul.search}} or
+\code{\LinkA{stac\_items()}{stac.Rul.items}} with the \code{raw} attribute, or the raw rstac result directly.
+
+\item[\code{assets}] Character vector. Asset names to download (e.g.,
+\code{c("red", "green", "blue")}). If \code{NULL}, downloads all assets.
+
+\item[\code{output\_dir}] Character. Directory where files are saved.
+Defaults to \code{\LinkA{tempdir()}{tempdir}}.
+
+\item[\code{overwrite}] Logical. Overwrite existing files? Defaults to \code{FALSE}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+The rstac items object (invisibly) with assets downloaded to
+\code{output\_dir}. Downloaded file paths can be retrieved with
+\code{\LinkA{rstac::assets\_url()}{rstac::assets.Rul.url()}}.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+
+# Search for items first
+items <- stac_search(
+  url = "https://earth-search.aws.element84.com/v1",
+  collections = "sentinel-2-l2a",
+  bbox = c(-84.5, 38.0, -84.3, 38.2),
+  limit = 1
+)
+
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{stac\_items}{List Items in a STAC Collection}{stac.Rul.items}
+%
+\begin{Description}
+Retrieves items from a specific collection in a STAC API endpoint and
+returns them as a tidy tibble. Wraps \code{\LinkA{rstac::items()}{rstac::items()}} with tidy output.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+stac_items(url, collection, limit = 100L)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{url}] Character. Root URL of a STAC API endpoint
+(e.g., \code{"https://earth-search.aws.element84.com/v1"}).
+
+\item[\code{collection}] Character. The collection ID to list items from.
+
+\item[\code{limit}] Integer. Maximum number of items to return. Defaults to 100.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \LinkA{tibble::tibble}{tibble::tibble} with one row per item and columns:
+\begin{description}
+
+\item[id] Item identifier.
+\item[collection] Collection the item belongs to.
+\item[datetime] Acquisition datetime as a character string.
+\item[bbox] Bounding box as a numeric list column.
+\item[geometry] GeoJSON geometry as a list column.
+\item[assets] Character vector of available asset names.
+
+\end{description}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+
+stac_items(
+  url = "https://earth-search.aws.element84.com/v1",
+  collection = "sentinel-2-l2a",
+  limit = 5
+)
+
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{stac\_map}{Map STAC Item Footprints}{stac.Rul.map}
+%
+\begin{Description}
+Creates an interactive 'leaflet' map showing the spatial footprints of
+STAC items returned by \code{\LinkA{stac\_search()}{stac.Rul.search}} or \code{\LinkA{stac\_items()}{stac.Rul.items}}. Requires the
+'leaflet' and 'sf' packages to be installed.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+stac_map(items)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{items}] A \LinkA{tibble::tibble}{tibble::tibble} of STAC items as returned by
+\code{\LinkA{stac\_search()}{stac.Rul.search}} or \code{\LinkA{stac\_items()}{stac.Rul.items}}, with a \code{geometry} list column.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{leaflet} htmlwidget object.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+
+items <- stac_search(
+  url = "https://earth-search.aws.element84.com/v1",
+  collections = "sentinel-2-l2a",
+  bbox = c(-84.5, 38.0, -84.3, 38.2),
+  limit = 5
+)
+stac_map(items)
+
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{stac\_registry}{Built-in catalog registry}{stac.Rul.registry}
+\keyword{internal}{stac\_registry}
+%
+\begin{Description}
+Returns a tibble of known STAC API endpoints bundled with the package.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+stac_registry()
+\end{verbatim}
+\end{Usage}
+%
+\begin{Value}
+A \LinkA{tibble::tibble}{tibble::tibble} with columns: \code{name}, \code{url}, \code{provider}.
+\end{Value}
+\HeaderA{stac\_search}{Search a STAC API}{stac.Rul.search}
+%
+\begin{Description}
+Searches a STAC API endpoint for items matching the given filters and
+returns results as a tidy tibble. Wraps \code{\LinkA{rstac::stac\_search()}{rstac::stac.Rul.search()}} with
+tidy output.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+stac_search(
+  url,
+  collections = NULL,
+  bbox = NULL,
+  datetime = NULL,
+  limit = 100L
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{url}] Character. Root URL of a STAC API endpoint
+(e.g., \code{"https://earth-search.aws.element84.com/v1"}).
+
+\item[\code{collections}] Character vector. Collection IDs to search within.
+
+\item[\code{bbox}] Numeric vector of length 4: \code{c(xmin, ymin, xmax, ymax)}.
+Only items intersecting this bounding box are returned.
+
+\item[\code{datetime}] Character. Date/time filter as a single datetime or
+range (e.g., \code{"2024-01-01/2024-12-31"}). Follows RFC 3339.
+
+\item[\code{limit}] Integer. Maximum number of items to return. Defaults to 100.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \LinkA{tibble::tibble}{tibble::tibble} with one row per item and columns:
+\begin{description}
+
+\item[id] Item identifier.
+\item[collection] Collection the item belongs to.
+\item[datetime] Acquisition datetime as a character string.
+\item[bbox] Bounding box as a numeric list column.
+\item[geometry] GeoJSON geometry as a list column.
+\item[assets] Character vector of available asset names.
+
+\end{description}
+
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+
+stac_search(
+  url = "https://earth-search.aws.element84.com/v1",
+  collections = "sentinel-2-l2a",
+  bbox = c(-84.5, 38.0, -84.3, 38.2),
+  limit = 5
+)
+
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{stac\_search\_raw}{Search STAC and Return Raw rstac Result}{stac.Rul.search.Rul.raw}
+%
+\begin{Description}
+Like \code{\LinkA{stac\_search()}{stac.Rul.search}} but returns the raw rstac \code{doc\_items} object
+instead of a tibble. Useful as input for \code{\LinkA{stac\_download()}{stac.Rul.download}} and
+\code{\LinkA{stac\_to\_cube()}{stac.Rul.to.Rul.cube}}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+stac_search_raw(
+  url,
+  collections = NULL,
+  bbox = NULL,
+  datetime = NULL,
+  limit = 100L
+)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{url}] Character. Root URL of a STAC API endpoint
+(e.g., \code{"https://earth-search.aws.element84.com/v1"}).
+
+\item[\code{collections}] Character vector. Collection IDs to search within.
+
+\item[\code{bbox}] Numeric vector of length 4: \code{c(xmin, ymin, xmax, ymax)}.
+Only items intersecting this bounding box are returned.
+
+\item[\code{datetime}] Character. Date/time filter as a single datetime or
+range (e.g., \code{"2024-01-01/2024-12-31"}). Follows RFC 3339.
+
+\item[\code{limit}] Integer. Maximum number of items to return. Defaults to 100.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+An rstac \code{doc\_items} object.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+
+raw <- stac_search_raw(
+  url = "https://earth-search.aws.element84.com/v1",
+  collections = "sentinel-2-l2a",
+  bbox = c(-84.5, 38.0, -84.3, 38.2),
+  limit = 1
+)
+
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{stac\_to\_cube}{Convert STAC Items to a gdalcubes Image Collection}{stac.Rul.to.Rul.cube}
+%
+\begin{Description}
+Bridges STAC search results to 'gdalcubes' for raster data cube analysis.
+Requires the 'gdalcubes' package to be installed.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+stac_to_cube(items, asset_names = NULL, ...)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{items}] An rstac \code{doc\_items} object as returned by \code{\LinkA{stac\_search\_raw()}{stac.Rul.search.Rul.raw}}
+or \code{\LinkA{rstac::post\_request()}{rstac::post.Rul.request()}}.
+
+\item[\code{asset\_names}] Character vector. Asset names to include in the
+image collection (e.g., \code{c("red", "green", "blue")}).
+
+\item[\code{...}] Additional arguments passed to
+\code{gdalcubes::stac\_image\_collection()}.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \code{gdalcubes} image collection object.
+\end{Value}
+%
+\begin{Examples}
+\begin{ExampleCode}
+
+
+raw <- stac_search_raw(
+  url = "https://earth-search.aws.element84.com/v1",
+  collections = "sentinel-2-l2a",
+  bbox = c(-84.5, 38.0, -84.3, 38.2),
+  limit = 5
+)
+cube <- stac_to_cube(raw, asset_names = c("red", "green", "blue"))
+
+
+\end{ExampleCode}
+\end{Examples}
+\HeaderA{tidy\_collections}{Convert STAC collections to a tidy tibble}{tidy.Rul.collections}
+\keyword{internal}{tidy\_collections}
+%
+\begin{Description}
+Convert STAC collections to a tidy tibble
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+tidy_collections(collections)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{collections}] An rstac \code{doc\_collections} object.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \LinkA{tibble::tibble}{tibble::tibble} with columns: \code{id}, \code{title}, \code{description}.
+\end{Value}
+\HeaderA{tidy\_items}{Convert STAC items to a tidy tibble}{tidy.Rul.items}
+\keyword{internal}{tidy\_items}
+%
+\begin{Description}
+Extracts key fields from an rstac items response (\code{doc\_items}) and returns
+a flat tibble with one row per item.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+tidy_items(items)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{items}] An rstac \code{doc\_items} object (result of \code{\LinkA{rstac::post\_request()}{rstac::post.Rul.request()}}
+or \code{\LinkA{rstac::get\_request()}{rstac::get.Rul.request()}} on a search or items endpoint).
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+A \LinkA{tibble::tibble}{tibble::tibble} with columns: \code{id}, \code{collection}, \code{datetime},
+\code{bbox}, \code{geometry}, and \code{assets}. Additional property columns are included
+from \code{rstac::items\_as\_tibble()}.
+\end{Value}
+\HeaderA{validate\_bbox}{Validate a bounding box}{validate.Rul.bbox}
+\keyword{internal}{validate\_bbox}
+%
+\begin{Description}
+Checks that \code{bbox} is a numeric vector of length 4 with valid coordinate
+ordering: \code{c(xmin, ymin, xmax, ymax)}.
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+validate_bbox(bbox)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{bbox}] Numeric vector of length 4.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\code{bbox} invisibly if valid; throws an error otherwise.
+\end{Value}
+\HeaderA{validate\_url}{Validate a STAC endpoint URL}{validate.Rul.url}
+\keyword{internal}{validate\_url}
+%
+\begin{Description}
+Validate a STAC endpoint URL
+\end{Description}
+%
+\begin{Usage}
+\begin{verbatim}
+validate_url(url)
+\end{verbatim}
+\end{Usage}
+%
+\begin{Arguments}
+\begin{ldescription}
+\item[\code{url}] Character string.
+\end{ldescription}
+\end{Arguments}
+%
+\begin{Value}
+\code{url} invisibly if valid; throws an error otherwise.
+\end{Value}
+\printindex{}
+\end{document}

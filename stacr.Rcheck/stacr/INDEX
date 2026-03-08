@@ -1,0 +1,10 @@
+has_internet            Check internet connectivity
+stac_catalogs           List Known STAC Catalogs
+stac_collections        List STAC Collections
+stac_download           Download STAC Assets
+stac_items              List Items in a STAC Collection
+stac_map                Map STAC Item Footprints
+stac_search             Search a STAC API
+stac_search_raw         Search STAC and Return Raw rstac Result
+stac_to_cube            Convert STAC Items to a gdalcubes Image
+                        Collection
