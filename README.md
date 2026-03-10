@@ -1,9 +1,9 @@
 # stacr <img src="man/figures/logo.svg" align="right" height="139" alt="" />
 
-[![R-CMD-check](https://github.com/null-island-labs/stacr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/null-island-labs/stacr/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/chrislyonsKY/stacr/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/null-island-labs/stacr/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/stacr)](https://CRAN.R-project.org/package=stacr)
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
-[![codecov](https://codecov.io/gh/null-island-labs/stacr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/null-island-labs/stacr)
+[![codecov](https://codecov.io/gh/chridlyonsKY/stacr/branch/main/graph/badge.svg)](https://app.codecov.io/gh/null-island-labs/stacr)
 
 > Tidy STAC Workflows for R
 
@@ -67,8 +67,7 @@ MIT
 
 ## Author
 
-**Chris Lyons** — [Null Island Labs](https://github.com/null-island-labs)
+**Chris Lyons**
 
 ---
 
-<sub>Part of the [Null Island Labs](https://github.com/null-island-labs) geospatial toolkit</sub>
